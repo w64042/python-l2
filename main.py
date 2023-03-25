@@ -17,3 +17,4 @@ m.save('map.html')
 
 # pandas
 # data = pd.read_cs('Volcanoes.txt')
+# data series, i loc, 2 wiersze data frame
