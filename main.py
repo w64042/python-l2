@@ -1,5 +1,5 @@
 import folium
-# import pandas as pd
+import pandas as pd
 
 m = folium.Map(location=[50.04908088464327, 21.981612615229974], title='Stamen Terrain', zoom_start=6, width=950, height=650)
 
@@ -27,8 +27,40 @@ lon = list(data['LON'])
 names = list(data['NAME'])
 elev = list(data['ELEV'])
 
+fg1 = folium.FeatureGroup('w 1 - wulkany')
+fg2 = folium.FeatureGroup('w 2 - panstwa')
+
+def set_color(elev):
+    if elev < 1000:
+        return 'green'
+    elif elev < 2000:
+        return 'orange'
+    else:
+        return 'red'
+
+def set_color_json(pop):
+    if pop < 1000000:
+        return 'green'
+    elif pop < 2000000:
+        return 'orange'
+    else:
+        return 'red'
+
 for lat, lon, name, elev in zip(lat, lon, names, elev):
-    folium.map.Marker([float(lat), float(lon)], popup=elev + "metres", icon=folium.Icon("orange")).add_to(m)
+
+    folium.CircleMarker(
+        [float(lat), float(lon)],
+        popup=elev,
+        radius=5,
+        color=set_color(elev),
+        fill_opacity=0.75,
+        fill_color=set_color(elev)).add_to(fg1)
+fg2.add_child(folium.GeoJson(data=open('world.json').read(), style_function=lambda x:{'fillColor': 'green' if x['properties']['POP2005'] < 10000000 else 'orange' if x['properties']['POP2005'] < 20000000 else 'red'}))
+
+m.add_child(fg1)
+m.add_child(fg2)
+
+m.add_child(folium.LayerControl())
 m.save('map.html')
 
 
