@@ -25,9 +25,10 @@ print(data['NAME'].iloc[3])
 lat = list(data['LAT'])
 lon = list(data['LON'])
 names = list(data['NAME'])
+elev = list(data['ELEV'])
 
-for lat, lon, name in zip(lat, lon, names):
-    folium.map.Marker([float(lat), float(lon)], popup=[name], icon=folium.Icon("orange")).add_to(m)
+for lat, lon, name, elev in zip(lat, lon, names, elev):
+    folium.map.Marker([float(lat), float(lon)], popup=elev + "metres", icon=folium.Icon("orange")).add_to(m)
 m.save('map.html')
 
 
